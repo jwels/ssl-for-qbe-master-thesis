@@ -1,0 +1,71 @@
+id,query,database,difficulty
+1,nativecountry == "Nicaragua",adult,0_0
+2,education != "Preschool",adult,0_0
+3,age > 52 and age < 71,adult,0_0
+4,capitalloss < 1421,adult,0_0
+5,gender == "Female",adult,0_0
+6,fnlwgt >= 490388 and education != "Bachelors",adult,0_1
+7,income != "gt50K" and relationship != "Husband",adult,0_1
+8,capitalloss >= 2264 and capitalloss <= 4024 and race == "Black",adult,0_1
+9,hoursperweek == 20 and education != "Bachelors",adult,0_1
+10,age >= 20 and age <= 45 and nativecountry != "Peru",adult,0_1
+11,educationnum == 14 and race != "Black" and gender != "Male",adult,0_2
+12,age < 64 and hoursperweek >= 46 and hoursperweek <= 85 and education != "Bachelors",adult,0_2
+13,capitalloss <= 3506 and nativecountry != "France" and race == "Asian-Pac-Islander",adult,0_2
+14,educationnum <= 15 and relationship == "Husband" and race == "Amer-Indian-Eskimo",adult,0_2
+15,educationnum >= 2 and maritalstatus != "Divorced" and education == "Some-college",adult,0_2
+16,fnlwgt <= 491595 and age >= 35 and workclass != "State-gov" and race != "White",adult,0_3
+17,fnlwgt >= 414227 and fnlwgt <= 1482015 and occupation != "Armed-Forces" and race == "Black" and gender == "Male",adult,0_3
+18,age >= 78 and nativecountry != "Yugoslavia" and maritalstatus == "Widowed" and occupation == "Sales",adult,0_3
+19,maritalstatus != "Married-AF-spouse" and education != "Masters" and relationship == "Own-child" and occupation != "Tech-support",adult,0_3
+20,capitalloss >= 0 and capitalloss <= 4092 and educationnum > 6 and capitalgain < 95036 and nativecountry == "Scotland",adult,0_3
+21,educationnum > 11 or capitalloss > 3162,adult,1_1
+22,age >= 54 and age <= 58 or income == "gt50K",adult,1_1
+23,hoursperweek > 97 or relationship != "Husband",adult,1_1
+24,educationnum <= 12 or nativecountry == "Columbia",adult,1_1
+25,age <= 27 or nativecountry == "England",adult,1_1
+26,occupation == "Armed-Forces" and capitalloss <= 7263 or maritalstatus == "Widowed",adult,1_2
+27,income != "leq50K" and education == "9th" or workclass == "State-gov",adult,1_2
+28,hoursperweek <= 21 or capitalgain < 59403 and relationship == "Own-child",adult,1_2
+29,education != "Bachelors" and maritalstatus != "Married-civ-spouse" or occupation == "Protective-serv",adult,1_2
+30,workclass == "State-gov" and age > 62 or capitalloss > 80 and capitalloss < 970,adult,1_2
+31,hoursperweek > 10 and hoursperweek < 81 and capitalgain >= 46751 or fnlwgt > 1444698 and fnlwgt < 1479104 and gender == "Female",adult,1_3
+32,age > 61 or income == "leq50K" and occupation == "Handlers-cleaners" or relationship == "Not-in-family",adult,1_3
+33,education == "Assoc-voc" and workclass != "Self-emp-inc" and occupation != "Exec-managerial" or race == "Amer-Indian-Eskimo",adult,1_3
+34,capitalloss > 2464 and capitalloss < 4082 and income != "gt50K" or workclass == "?" and education == "9th",adult,1_3
+35,age > 31 and age < 45 or occupation != "Exec-managerial" or workclass == "State-gov" and gender != "Female" and maritalstatus == "Married-AF-spouse",adult,1_3
+36,alpha > 142,stars,0_0
+37,MJD <= 56863,stars,0_0
+38,z > -789 and z < 12,stars,0_0
+39,objclass == "GALAXY",stars,0_0
+40,redshift >= 6,stars,0_0
+41,i >= 23 and r >= 21,stars,0_1
+42,redshift <= 6 and runID >= 4651,stars,0_1
+43,MJD >= 55578 and objclass != "STAR",stars,0_1
+44,camcol <= 4 and objclass == "QSO",stars,0_1
+45,delta > 58 and delta < 70 and objclass != "STAR",stars,0_1
+46,u > -9621 and delta > 36 and delta < 46 and objclass == "GALAXY",stars,0_2
+47,plate == 1665 and delta >= 27 and i <= 15,stars,0_2
+48,z <= 82 and alpha >= 354 and MJD > 56590,stars,0_2
+49,camcol <= 4 and g > -5730 and u < 17,stars,0_2
+50,redshift <= 2 and g < -5781 and objclass != "QSO",stars,0_2
+51,i >= 21 and delta >= 52 and redshift > 2 and r <= 27,stars,0_3
+52,fiberID >= 64 and runID <= 1407 and plate > 10807 and plate < 11851 and objclass != "QSO",stars,0_3
+53,u >= -8128 and i > 14 and i < 19 and redshift <= 2 and MJD <= 52570,stars,0_3
+54,camcol < 3 and z >= -712 and MJD > 53486 and MJD < 54727 and objclass == "STAR",stars,0_3
+55,plate > 4426 and redshift >= 6 and i > 8 and alpha <= 357,stars,0_3
+56,alpha < 244 or objclass != "STAR",stars,1_1
+57,g <= -2771 or objclass == "GALAXY",stars,1_1
+58,u >= 15 or g <= -8726,stars,1_1
+59,fiberID < 131 or camcol < 2,stars,1_1
+60,u > 11 and u < 13 or z < 10,stars,1_1
+61,redshift >= 1 or z > -2057 and objclass != "GALAXY",stars,1_2
+62,alpha <= 356 or i == 30 or objclass != "GALAXY",stars,1_2
+63,r <= 24 or plate > 3141 and plate < 8728 and objclass == "QSO",stars,1_2
+64,fiberID < 13 or delta >= 9 or runID <= 2914,stars,1_2
+65,z >= -5597 and i <= 15 or alpha > 336 and alpha < 421,stars,1_2
+66,delta > 25 and g <= -329 or camcol > 1 and camcol < 3 and alpha < 271,stars,1_3
+67,delta <= -9 and i < 29 and redshift > 4 and redshift < 7 and objclass == "QSO",stars,1_3
+68,i <= 17 and u >= -2896 or fieldID >= 489 and MJD <= 53503,stars,1_3
+69,delta > -9 or u <= -358 and fieldID > 747 or runID < 1788,stars,1_3
+70,MJD < 55989 and alpha > 92 and alpha < 321 and objclass == "QSO" or redshift >= 6,stars,1_3

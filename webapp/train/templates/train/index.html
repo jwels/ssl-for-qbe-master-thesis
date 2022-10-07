@@ -1,0 +1,69 @@
+{% extends "base_template.html" %}
+
+{% block content %}
+
+<div class="d-flex flex-column p-2" name="main">
+  <h1>Model Tuning</h1>
+  <div class="d-inline-flex flex-row justify-content-between">
+    <div class="d-inline-flex flex-row justify-content-start">
+      <p class="m-1 mr-3"><strong>Number of models:</strong> {{ models|length }}</p>
+      <p class="m-1"><strong>Selected Model:</strong></p><p class="m-1">{{ selectedModel.name|default:'No model selected' }}</p>
+      <p class="m-1"><strong>ID:</strong></p><p class="m-1">{{ selectedModel.id|default:'None' }}</p>
+    </div>
+      <div class="d-inline-flex flex-row">
+        <a type="submit" class="btn btn-success" id="newModelBttn" name="newModelBttn" href="/train/newModel" style="color: white;">New Model</a>
+      </div>
+  </div>
+</div>
+  {% if models %}
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th scope="col">ID</th>
+              <th scope="col">Name</th>
+              <th scope="col">Description</th>
+              <th scope="col">Type</th>
+              <th scope="col">SSL Certainty Threshold</th>
+              <th scope="col">Tuning completed</th>
+              <th scope="col">F1-Score (Before SSL)</th>
+              <th scope="col">F1-Score (After SSL)</th>
+              <th scope="col">Created at</th>
+              <th scope="col">Options</th>
+            </tr>
+          </thead>
+          <tbody>        
+      {% for model in models %}
+        <tr>
+          <td>{{ model.id }}</td>
+          <td><strong>{{ model.name }}</strong></td>
+          <td>{{ model.modelDescr }}</td>
+          <td>{{ model.get_modelType_display }}</td>
+          <td>{{ model.removeLowestCertaintyPercentage }}</td>
+          <td>{{ model.finishedTraining }}</td>
+          <td>{{ model.f1scoreTest|floatformat:4 }}</td>
+          <td>{{ model.f1scoreVal|floatformat:4 }}</td>
+          <td>{{ model.createdAt }}</td>
+          <td>
+            <div class="d-inline-flex flex-row">
+              <form action="selectModel" method="post" class="m-1">{% csrf_token %}
+                <input type="hidden" id="modelId" name="modelId" value="{{ model.id }}">
+                <input type="submit" class="form-control btn btn-info" id="selectButton" name="select" value="Select">
+              </form>
+              <form action="dropModel" method="post" class="m-1">{% csrf_token %}
+                <input type="hidden" id="modelId" name="modelId" value="{{ model.id }}">
+                <input type="submit" class="form-control btn btn-secondary" id="deleteButton" name="delete" value="Delete">
+              </form>
+            </div>            
+          </td>
+        </tr>        
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+  <div class="alert alert-primary m-3" role="alert">
+    No models found. Train some models before.
+  </div>
+  {% endif %}
+</div>
+
+{% endblock %}

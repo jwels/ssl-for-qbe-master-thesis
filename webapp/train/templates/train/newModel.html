@@ -1,0 +1,84 @@
+{% extends "base_template.html" %}
+
+{% block content %}
+
+<div class="d-flex flex-column p-2" name="main">
+  <h1>Create new Model</h1>
+</div>
+<form action="createNewModel" method="post">{% csrf_token %}
+
+
+  
+  <div class="d-inline-flex flex-column justify-content-center m-3">
+    {% for field in form %}
+    <div class="d-inline-flex flex-row m-2">
+      {% if field.field.widget.input_type == "select" %}
+      <label id="{{ field.name }}_Help" class="form-text text-muted m-1">{{ field.label }}:</label>
+      <select class="form-control" name="{{ field.name }}" id="id_{{ field.name }}"  placeholder="{{ field.label }}" aria-describedby="{{ field.name }}_Help">
+        {% for value, label in form.fields.modelType.choices %}
+            <option value="{{ value }}" {% if form.modelType.value == value %} selected {% endif %}>{{ label }}</option>
+        {% endfor %}
+      </select>
+      {% else %}
+        {% if field.name == "maxEvals" %}
+        <label id="{{ field.name }}_Help" class="form-text text-muted m-1">{{ field.label }}:</label>
+        <input type="number" class="form-control" name="{{ field.name }}" id="id_{{ field.name }}" min="1" max="99999" value="1" step="1" aria-describedby="{{ field.name }}_Help">
+        {% elif field.name == "removeLowestCertaintyPercentage" %}
+        <label id="{{ field.name }}_Help" class="form-text text-muted m-1">{{ field.label }}:</label>
+        <input type="number" class="form-control" name="{{ field.name }}" id="id_{{ field.name }}" min="0.0" max="1.0" value="0.0" step="0.01" aria-describedby="{{ field.name }}_Help">
+        {% else %}
+        <label id="{{ field.name }}_Help" class="form-text text-muted m-1">{{ field.label }}:</label>
+        <input type="text" class="form-control" name="{{ field.name }}" id="id_{{ field.name }}" value="{{ field.initial }}" aria-describedby="{{ field.name }}_Help">
+        {% endif %}
+      {% endif %}
+    </div>
+    
+    {% endfor %}
+  </div>
+    <!-- <div class="d-inline-flex flex-row m-2">
+        <label id="descrHelp" class="form-text text-muted  m-1">Description</label>
+        <input type="text" class="form-control" id="descr" name="descr" placeholder="Description" aria-describedby="descrHelp" >          
+    </div>
+    <div class="d-inline-flex flex-row m-2">
+      <label id="typeHelp" class="form-text text-muted  m-1">Type</label>
+      <input type="text" class="form-control" id="modelType" name="modelType" placeholder="" aria-describedby="typeHelp" >          
+    </div>              
+    <div class="d-flex justify-content-end m-2">
+      <div>
+        <input type="submit" class="form-control btn btn-info" id="submitButton" value="Start Training">
+      </div>
+    </div> -->
+  
+  <!-- <fieldset>
+    <legend>{{ title }}</legend>
+    {% for field in form %}
+        {% if field.errors %}
+            <div class="control-group error">
+                <label class="control-label">{{ field.label }}</label> 
+                <div class="controls">{{ field }}
+                    <span class="help-inline">
+                        {% for error in  field.errors %}{{ error }}{% endfor %}
+                    </span>
+                </div>
+            </div>
+        {% else %}
+            <div class="form-group">
+                <label class="form-text">{{ field.label }}</label> 
+                <div class="form-control">{{ field }}
+                    {% if field.help_text %}
+                        <p class="help-inline"><small>{{ field.help_text }}</small></p>
+                    {% endif %}
+                </div>
+            </div>
+        {% endif %}
+    {% endfor %}
+</fieldset> -->
+
+
+  <div class="d-flex justify-content-end m-2">
+    <div>
+      <input type="submit" class="form-control btn btn-info" id="submitButton" value="Start tuning">
+    </div>
+  </div>
+</form>
+{% endblock %}

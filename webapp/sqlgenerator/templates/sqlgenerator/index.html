@@ -1,0 +1,80 @@
+{% extends "base_template.html" %}
+
+{% block content %}
+
+<div class="d-flex flex-column p-2" name="main">
+  <h1>Training Data + SQL Generator</h1>
+  <div class="d-inline-flex flex-row justify-content-between m-3">
+    <!-- Stats -->
+    <div class="d-inline-flex flex-column">
+      <p>Number of Queries: {{ queries|length }}</p>
+      <p>Number of Training Sets: {{ n_of_trainingdata }}/{{ queries|length }}</p>
+    </div>
+    <!-- SQL Generator Buttons -->
+    <div class="d-inline-flex flex-column">
+      <h3>SQL Generator</h3>
+      <div class="d-inline-flex flex-row">
+        <form action="generate" method="post">{% csrf_token %}
+          <div class="d-inline-flex flex-column mr-1">
+            <input type="number" class="form-control" id="nOfQueries" name="nOfQueries" placeholder="Amount" value="10" min="1" aria-describedby="numberHelp" >          
+            <small id="numberHelp" class="form-text text-muted ml-1">Choose number of queries.</small>
+          </div>
+          <div class="d-inline-flex flex-column mr-1">
+            <input type="number" class="form-control" id="minCols" name="minCols" placeholder="Min. Cols" value="1" min="1" max="{{n_of_fields}}" aria-describedby="minColsHelp" >          
+            <small id="minColsHelp" class="form-text text-muted ml-1">Choose min. number of columns.</small>
+          </div>
+          <div class="d-inline-flex flex-column mr-1">
+            <input type="number" class="form-control" id="maxCols" name="maxCols" placeholder="Max. Cols" value="6" min="1" max="{{n_of_fields}}" aria-describedby="maxColsHelp" >          
+            <small id="maxColsHelp" class="form-text text-muted ml-1">Choose max. number of columns.</small>
+          </div>
+          <div class="d-inline-flex flex-column ml-1">
+            <input type="submit" class="form-control btn btn-info" id="submitButton" value="Generate">
+          </div>
+        </form>
+        <div class="d-inline-flex flex-column ml-2">
+          <form action="dropall" method="post">{% csrf_token %}
+            <input type="submit" class="form-control btn btn-secondary" id="submitButton" name="dropAll" value="Drop All">
+        </form>
+        </div>
+      </div>
+    </div>
+    <!-- Training Data Buttons -->
+    <div class="d-inline-flex flex-column">
+      <h3>Training Data</h3>
+      <div class="d-inline-flex flex-row" aria-describedby="trainingHelp">
+        <form action="gentraindata" method="post" class="m-1">{% csrf_token %}
+          <input type="submit" class="form-control btn btn-info" id="submitButton" name="genTrain" value="Generate">
+        </form>
+        <form action="dropalltrain" method="post" class="m-1">{% csrf_token %}
+          <input type="submit" class="form-control btn btn-secondary" id="submitButton" name="dropAllTrain" value="Drop All">
+        </form>
+      </div>
+      <small id="trainingHelp" class="form-text text-muted ml-1">Refresh to show progress.</small>
+    </div>
+  </div>
+  {% if queries %}
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th scope="col">ID</th>
+              <th scope="col">Query Statement</th>
+            </tr>
+          </thead>
+          <tbody>        
+      {% for query in queries %}
+ 
+        <tr>
+          <td>{{ query.id }}</td>
+          <td>{{ query.sql_statement }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+  <div class="alert alert-primary m-3" role="alert">
+    No queries found. Generate some Queries above.
+  </div>
+  {% endif %}
+</div>
+
+{% endblock %}

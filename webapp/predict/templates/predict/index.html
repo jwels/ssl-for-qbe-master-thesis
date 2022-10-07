@@ -1,0 +1,483 @@
+{% extends "base_template.html" %}
+
+{% block content %}
+
+<div class="d-flex flex-column p-2" name="header">
+    <h1>Run a Query</h1>
+    <div class="d-inline-flex flex-row justify-content-between">
+        <div class="d-inline-flex flex-row justify-content-start">
+            <p class="m-1"><strong>Selected Model:</strong></p>
+            <p class="m-1">{{ selectedModel.name|default:'No model selected' }}</p>
+            <p class="m-1"><strong>ID:</strong></p>
+            <p class="m-1">{{ selectedModel.id|default:'None' }}</p>
+        </div>
+    </div>
+</div>
+<div id="main" class="d-flex flex-row m-2 justify-content-center">
+    <!-- QBE Input Table -->
+    <div class="d-flex flex-column p-2">
+        <h3>Query Input</h3>
+        <div class="d-inline-flex flex-row">
+            <div class="d-inline-flex flex-column m-2">
+                <form action="runQuery" method="post">{% csrf_token %}
+                    <table class="table table-striped table-bordered" id="my-table">
+                        <thead>
+                            <tr id="header_row">
+                                <th scope="col">Positive</th>
+                                <th scope="col">Column 1
+                                    <select class="form-control" name="select0" id="select0">
+                                        {% for value in existing_cols %}
+                                        <option value="{{ value }}">{{ value }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </th>
+                                <th scope="col">Column 2
+                                    <select class="form-control" name="select1" id="select1">
+                                        {% for value in existing_cols %}
+                                        <option value="{{ value }}">{{ value }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbody">
+                            <tr id="default_row">
+                                <td style="text-align: center;">
+                                    <input class="form-check-input" type="hidden" value="off" name="checkbox0"
+                                        id="checkbox0" checked="checked" aria-label="..."></input>
+                                    <input class="form-check-input" type="checkbox" name="checkbox0" id="checkbox0"
+                                        checked="checked" aria-label="..."></input>
+                                </td>
+                                <td>
+                                    <div class="col"><input type="text" class="form-control basicAutoComplete"
+                                            autocomplete="off" name="cell_0_0" id="cell_0_0"></input></div>
+                                </td>
+                                <td>
+                                    <div class="col"><input type="text" class="form-control basicAutoComplete"
+                                            autocomplete="off" name="cell_0_1" id="cell_0_1"></input></div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: center;">
+                                    <input class="form-check-input" type="hidden" value="off" name="checkbox1"
+                                        id="checkbox1" checked="checked" aria-label="..."></input>
+                                    <input class="form-check-input" type="checkbox" name="checkbox1" id="checkbox1"
+                                        checked="checked" aria-label="..."></input>
+                                </td>
+                                <td>
+                                    <div class="col"><input type="text" class="form-control basicAutoComplete"
+                                            autocomplete="off" name="cell_1_0" id="cell_1_0"></input></div>
+                                </td>
+                                <td>
+                                    <div class="col"><input type="text" class="form-control basicAutoComplete"
+                                            autocomplete="off" name="cell_1_1" id="cell_1_1"></input></div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: center;">
+                                    <input class="form-check-input" type="hidden" value="off" name="checkbox2"
+                                        id="checkbox2" checked="checked" aria-label="..."></input>
+                                    <input class="form-check-input" type="checkbox" name="checkbox2" id="checkbox2"
+                                        aria-label="..."></input>
+                                </td>
+                                <td>
+                                    <div class="col"><input type="text" class="form-control basicAutoComplete"
+                                            autocomplete="off" name="cell_2_0" id="cell_2_0"></input></div>
+                                </td>
+                                <td>
+                                    <div class="col"><input type="text" class="form-control basicAutoComplete"
+                                            autocomplete="off" name="cell_2_1" id="cell_2_1"></input></div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: center;">
+                                    <input class="form-check-input" type="hidden" value="off" name="checkbox3"
+                                        id="checkbox3" checked="checked" aria-label="..."></input>
+                                    <input class="form-check-input" type="checkbox" name="checkbox3" id="checkbox3"
+                                        aria-label="..."></input>
+                                </td>
+                                <td>
+                                    <div class="col"><input type="text" class="form-control basicAutoComplete"
+                                            autocomplete="off" name="cell_3_0" id="cell_3_0"></input></div>
+                                </td>
+                                <td>
+                                    <div class="col"><input type="text" class="form-control basicAutoComplete"
+                                            autocomplete="off" name="cell_3_1" id="cell_3_1"></input></div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="d-inline-flex flex-row m-2 justify-content-center">
+                        <div id="addRow" class="add m-2">
+                            <div class="btn btn-info btn-block" id="addRowChild"><b>Add Row</b></div>
+                        </div>
+                        <div id="removeRow" class="remove m-2">
+                            <div class="btn btn-secondary btn-block" id="removeRowChild"><b>Remove Row</b></div>
+                        </div>
+                    </div>
+                    <input type="hidden" name="n_rows" id="n_rows_form" value="{{ n_rows }}" />
+                    <input type="hidden" name="n_cols" id="n_cols_form" value="{{ n_cols }}" />
+                    <div class="d-inline-flex flex-row justify-content-center">
+                        <button type="submit" class="btn btn-success btn-block" id="submitBttn"
+                            style="color: white;"><b>Run
+                                Query</b></button>
+                    </div>
+                </form>
+            </div>
+            <div class="d-inline-flex flex-column m-2 justify-content-center">
+                <div id="addColumn" class="add m-2">
+                    <div class="btn btn-info btn-block" id="addColumnChild"><b>Add Column</b></div>
+                </div>
+                <div id="removeColumn" class="remove m-2">
+                    <div class="btn btn-secondary btn-block" id="removeColumnChild"><b>Remove Column</b></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Example Queries -->
+    <div class="d-flex flex-column p-2" name="examplequeries">
+        <h3>Example Queries:</h3>
+        <ul>
+            <li>
+                <form action="runExampleQuery" method="post">{% csrf_token %}
+                    <div class="d-inline-flex flex-row">
+                        <input type="hidden" name="exampleQueryId" id="exampleQueryId" value="1" />
+                        <button type="submit" class="btn btn-outline-secondary ml-2" id="submitBttn">Mexico + age >
+                            50</button>
+                    </div>
+                </form>
+            </li>
+            <li>
+                <form action="runExampleQuery" method="post">{% csrf_token %}
+                    <div class="d-inline-flex flex-row">
+                        <input type="hidden" name="exampleQueryId" id="exampleQueryId" value="2" />
+                        <button type="submit" class="btn btn-outline-secondary ml-2" id="submitBttn">Female + age in
+                            [30, 50] </button>
+                    </div>
+                </form>
+            </li>
+            <li>
+                <form action="runExampleQuery" method="post">{% csrf_token %}
+                    <div class="d-inline-flex flex-row">
+                        <input type="hidden" name="exampleQueryId" id="exampleQueryId" value="3" />
+                        <button type="submit" class="btn btn-outline-secondary ml-2" id="submitBttn">Germany + Male +
+                            age in [20, 40] </button>
+                    </div>
+                </form>
+            </li>
+            <li>
+                <form action="runExampleQuery" method="post">{% csrf_token %}
+                    <div class="d-inline-flex flex-row">
+                        <input type="hidden" name="exampleQueryId" id="exampleQueryId" value="4" />
+                        <button type="submit" class="btn btn-outline-secondary ml-2" id="submitBttn">(Manager + age in
+                            [40,90]) OR (Sales + age in [17,40])</button>
+                    </div>
+                </form>
+            </li>
+        </ul>
+        <div>
+            <h3>Tips:</h3>
+            <ul>
+                <li>
+                    <small id="tip1" class="form-text text-muted ml-1">Only enter <strong>existing</strong> values into categorical columns <br> by
+                        using the <strong>autocomplete</strong> suggestions from the DB.</small>
+                </li>
+                <li>
+                    <small id="tip2" class="form-text text-muted ml-1">For numeric columns: include the
+                        <strong>minimum</strong> and <strong>maximum</strong> <br>values you want in your
+                        results as an example.</small>
+                </li>
+                <li>
+                    <small id="tip3" class="form-text text-muted ml-1">Use <strong>[min,max]</strong> to specify a
+                        <strong>range</strong> between two values <br> in one example.</small>
+                </li>
+                <li>
+                    <small id="tip4" class="form-text text-muted ml-1">You can use the <strong>example queries</strong>
+                        above to quickly <br> compare models on the same input.</small>
+                </li>
+                <li>
+                    <small id="tip5" class="form-text text-muted ml-1">Try to provide enough <strong>negative
+                            examples</strong> to <br> exclude everything you don't want in your results.</small>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<!-- Results -->
+<div class="d-flex flex-row m-2 justify-content-center">
+    <!-- Query and Model -->
+    <div class="d-flex flex-column p-2 m-3" name="header">
+        <h3>Constructed Model + Query</h3>
+        {% load static %}
+        <p class="m-1"><strong>Cosntructed Model:</strong></p>
+        <small id="modelImgHelp" class="form-text text-muted ml-1">For Gradient Boosting and Random Forest, only the first of many trees
+            is shown.</small>
+        <img id="modelImg" width="640" height="480" src="{% static 'qbe_gdb_tree_image.png' %}"
+            class="d-inline-block align-top" alt="">
+        <div class="d-inline-flex flex-column justify-content-start">
+            <p class="m-1"><strong>Base Query:</strong></p>
+            <small id="modelImgHelp" class="form-text text-muted ml-1">Constructed from your examples to generate model
+                training data.</small>
+            <pre class="m-3 ml-5" style="overflow-wrap: break-word; max-width:900px ">{{ base_query }}</pre>
+        </div>
+        <div class="d-inline-flex flex-column justify-content-start">
+            <p class="m-1"><strong>Modeled Query:</strong></p>
+            <small id="modelImgHelp" class="form-text text-muted ml-1">For Gradient Boosting and Random Forest, SQL does not reflect model
+                results.</small>
+            <pre class="m-3 ml-5" style="overflow-wrap: break-word; max-width:900px ">{{ found_query }}</pre>
+        </div>
+    </div>
+    <!-- Table -->
+    <div class="d-flex flex-column p-2 m-3" name="header">
+        <h3>Results</h3>
+        <div class="d-inline-flex flex-row justify-content-start">
+            <p class="m-1"><strong>Result set size:</strong></p>
+            <p class="m-1">{{ predictions|length }} / {{ max_number_entries }}</p>
+        </div>
+        <div class="d-inline-flex">
+            <div class="d-inline-flex flex-column justify-content-start">
+                <form action="" method="post">{% csrf_token %}
+                    <!-- <select class="form-select" name="selectresultcols[]" multiple size="3" aria-label="Select">
+                            <option selected>Select columns while holding Ctrl.</option>
+                            {% for value in existing_cols %}
+                                <option value="{{ value }}">{{ value }}</option>
+                            {% endfor %}
+                        </select> -->
+                    <div class="d-inline-flex flex-column  mr-3">
+                        {{ form.as_p }}
+                        <button type="submit" class="btn btn-info btn-block" id="submitBttn"
+                            style="color: white;"><b>Update</b></button>
+                    </div>
+                </form>
+            </div>
+            <div class="d-inline-flex flex-column align-self-stretch">
+                {% if not predictions.empty %}
+                <div class="table-responsive-md">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <!-- <th scope="col">ID</th> -->
+                                {% for column in predictions.columns.values %}
+                                {% if column != 'index' %}
+                                <th scope="col">{{ column }}</th>
+                                {% endif %}
+                                {% endfor %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in predictions.itertuples %}
+                            <tr>
+                                {% for column in row %}
+                                <td>{{ column }}</td>
+                                {% endfor %}
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="alert alert-primary m-3" role="alert">
+                    No results yet. Start a Query above.
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<!-- JS Code for autocomplete in the input fields -->
+<script>
+    // Autocomplete for first column
+    $("input[name$='_0']").autoComplete({
+        preventEnter: true,
+        minLength: 1,
+        // resolverSettings: {
+        //     url: 'getAutoCompletes?column=nativecountry',
+        // }
+        resolver: 'custom',
+        events: {
+            search: function (qry, callback) {
+                // call backend to get auto completes     
+                $.ajax(
+                    'getAutoCompletes',
+                    {
+                        data: { column: $('#select0 :selected').val(), q: qry }
+                    }
+                ).done(function (res) {                  
+                    callback(res);
+                });
+            }
+        }
+    });
+    // Autocomplete for second column
+    $("input[name$='_1']").autoComplete({
+        preventEnter: true,
+        minLength: 1,
+        // resolverSettings: {
+        //     url: 'getAutoCompletes?column=nativecountry',
+        // }
+        resolver: 'custom',
+        events: {
+            search: function (qry, callback) {
+                // call backend to get auto completes     
+                $.ajax(
+                    'getAutoCompletes',
+                    {
+                        data: { column: $('#select1 :selected').val(), q: qry }
+                    }
+                ).done(function (res) {
+                    callback(res)
+                });
+            }
+        }
+    });
+    // Autocomplete for third column
+    $("input[name$='_2']").autoComplete({
+        preventEnter: true,
+        minLength: 1,
+        // resolverSettings: {
+        //     url: 'getAutoCompletes?column=nativecountry',
+        // }
+        resolver: 'custom',
+        events: {
+            search: function (qry, callback) {
+                // call backend to get auto completes     
+                $.ajax(
+                    'getAutoCompletes',
+                    {
+                        data: { column: $('#select2 :selected').val(), q: qry }
+                    }
+                ).done(function (res) {
+                    callback(res)
+                });
+            }
+        }
+    });
+    // Autocomplete for fourth column
+    $("input[name$='_3']").autoComplete({
+        preventEnter: true,
+        minLength: 1,
+        // resolverSettings: {
+        //     url: 'getAutoCompletes?column=nativecountry',
+        // }
+        resolver: 'custom',
+        events: {
+            search: function (qry, callback) {
+                // call backend to get auto completes     
+                $.ajax(
+                    'getAutoCompletes',
+                    {
+                        data: { column: $('#select3 :selected').val(), q: qry }
+                    }
+                ).done(function (res) {
+                    callback(res)
+                });
+            }
+        }
+    });
+</script>
+
+<!-- JS Code for extending and shrinking the table via buttons -->
+<script>
+    // -1 too use n_rows and n_cols as index
+    var n_rows = Number("{{ n_rows }}") - 1
+    var n_cols = Number("{{ n_cols }}") - 1
+    $('#addColumnChild').click(function () {
+        if (n_cols < Number("{{ max_cols }}")) {
+            n_cols = n_cols + 1
+            document.getElementById("n_cols_form").value = n_cols + 1;
+            i = 0
+            $('#header_row').append(`<th>Column ` + Number(n_cols + 1) + `
+                                        <select class="form-control" name="select` + n_cols + `" id="select` + n_cols + `">
+                                            {% for value in existing_cols %}
+                                                <option value="{{ value }}">{{ value }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </th>`
+            );
+            $('#tbody tr').each(function () {
+                $(this).append('<td><div class="col"><input type="text" class="form-control basicAutoComplete" autocomplete="off" name="cell_' + i + '_' + n_cols + '" id="cell_' + n_cols + '_' + n_rows + '"></input></div></td>');
+                i = i + 1
+            })
+            $("input[name$='_"+ n_cols +"']").autoComplete({
+                preventEnter: true,
+                minLength: 1,
+                // resolverSettings: {
+                //     url: 'getAutoCompletes?column=nativecountry',
+                // }
+                resolver: 'custom',
+                events: {
+                    search: function (qry, callback) {
+                        // call backend to get auto completes     
+                        $.ajax(
+                            'getAutoCompletes',
+                            {
+                                data: { column: $('#select'+ n_cols +' :selected').val(), q: qry }
+                            }
+                        ).done(function (res) {
+                            callback(res)
+                        });
+                    }
+                }
+            });
+        }
+    });
+    $('#removeColumnChild').click(function () {
+        if (n_cols >= Number("{{ min_cols }}")) {
+            n_cols = n_cols - 1
+            document.getElementById("n_cols_form").value = n_cols + 1;
+            $("#my-table th:last-child, #tbody td:last-child").remove();
+        }
+    });
+    $('#addRowChild').click(function () {
+        if (n_rows <= Number("{{ max_rows }}")) {
+            n_rows = n_rows + 1
+            document.getElementById("n_rows_form").value = n_rows + 1;
+            tr = `<tr>
+                        <td style="text-align: center;">
+                            <input class="form-che  ck-input" type="hidden" name="checkbox` + Number(n_rows+1) + `" id="checkbox` + Number(n_rows+1) + `" value="off" aria-label="..."></input>
+                            <input class="form-check-input" type="checkbox" name="checkbox` + Number(n_rows+1) + `" id="checkbox` + Number(n_rows+1) + `" checked="checked" aria-label="..."></input>
+                        </td>
+                    </tr>`
+            for (let i = 0; i <= n_cols; i++) {
+                // cell_num = (n_rows-1)*n_cols+i            
+                tr = $(tr).append(`<td><div class="col"><input type="text" class="form-control basicAutoComplete" autocomplete="off" name="cell_` + n_rows + `_` + i + `" id="cell` + n_rows + `_` + i + `"></input></div></td>`);
+                // console.log(tr)
+            }
+            $('#my-table tbody').append(tr);
+            for (let i = 0; i <= n_cols; i++) {
+                $("input[name$='_"+ i +"']").autoComplete({
+                    preventEnter: true,
+                    minLength: 1,
+                    // resolverSettings: {
+                    //     url: 'getAutoCompletes?column=nativecountry',
+                    // }
+                    resolver: 'custom',
+                    events: {
+                        search: function (qry, callback) {
+                            // call backend to get auto completes     
+                            $.ajax(
+                                'getAutoCompletes',
+                                {
+                                    data: { column: $('#select'+ i +' :selected').val(), q: qry }
+                                }
+                            ).done(function (res) {                                
+                                callback(res)
+                            });
+                        }
+                    }
+                });
+            }
+        }
+    });
+    $('#removeRowChild').click(function () {
+        if (n_rows >= Number("{{ min_rows }}")) {
+            n_rows = n_rows - 1
+            document.getElementById("n_rows_form").value = n_rows + 1;
+            $("#tbody tr:last").remove();
+        }
+    });
+</script>
+
+{% endblock %}
